@@ -12,10 +12,12 @@ import org.primefaces.json.JSONObject;
  */
 public class JsonUtils {
 
-    private static JsonSingleton jsonSingleton;
+    private JsonSingleton jsonSingleton;
 
     public JsonSingleton getSingleton() {
-        return JsonUtils.jsonSingleton;
+        if(this.jsonSingleton == null)
+            this.jsonSingleton = new JsonSingleton();
+        return jsonSingleton;
     }
 
     /**

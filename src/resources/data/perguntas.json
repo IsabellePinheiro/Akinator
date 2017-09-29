@@ -1,0 +1,30 @@
+[
+  {
+    "Male":"Seu personagem eh do sexo masculino?",
+    "Femelle":"Seu personagem eh do sexo feminino?",
+    "Humain":"Seu personagem eh um humano?",
+    "Super-Heros":"Seu personagem eh um super-heroi?",
+    "Petit":"Seu personagem eh pequeno?",
+    "Moyen":"Seu personagem eh mehdio?",
+    "Grand":"Seu personagem eh grande?",
+    "Pouvoir":"Seu personagem tem poderes?",
+    "Vole":"Seu personagem voa?",
+    "Force":"Seu personagem eh forte?",
+    "Cape":"Seu personagem usa uma capa?",
+    "Adulte":"Seu personagem eh um adulto?",
+    "Animal":"Seu personagem eh um animal?",
+    "Intelligence":"Seu personagem eh inteligente?",
+    "Fait_des_betises":"Seu personagem faz coisas estupidas?",
+    "Gentil":"Seu personagem eh gentil?",
+    "Se_battre":"Seu personagem eh briguento?",
+    "Poilu":"Seu personagem eh peludo?",
+    "Parole":"Seu personagem fala?",
+    "Aquatique":"Seu personagem eh aquático?",
+    "Transformation":"Seu personagem se transforma?",
+    "Jaune":"Seu personagem eh amarelo?",
+    "Vert":"Seu personagem eh verde?",
+    "Bleu":"Seu personagem eh azul?",
+    "Rouge":"Seu personagem eh vermelho?",
+    "Marron":"Seu personagem eh marrom?"
+  }
+]

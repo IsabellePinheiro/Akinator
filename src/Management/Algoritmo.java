@@ -47,15 +47,15 @@ public class Algoritmo {
     /*
 	 * Intancia da classe gerenciadora de JSONs
      */
-    private static JsonUtils jsonUtils;
+    private static JsonUtils jsonUtils = new JsonUtils();
 
     //Quantidade mínima de perguntas antes de propor um resultado
-    public final int QUESTIONS_THRESOLD = 15;
+    public final int QUESTIONS_THRESOLD = 5;
 
     /*
 	 * Pontuação mínima para poder propor uma resultado
      */
-    private final int PROPOSAL_THRESOLD = 10;
+    private final int PROPOSAL_THRESOLD = 80;
 
     public void resetAllData() {
         if (!pontuacaoPersonagens.isEmpty()) {
@@ -131,7 +131,7 @@ public class Algoritmo {
             }
 
         }
-
+        
         pergunta = jsonUtils.getPergunta(chaveMaisRestringente);
         return chaveMaisRestringente + ";" + pergunta;
     }

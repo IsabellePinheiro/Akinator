@@ -2,6 +2,7 @@ package Management;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -16,8 +17,9 @@ public class JsonReader {
      * @param filename
      * @return
      * @throws IOException 
+     * @throws java.io.FileNotFoundException 
      */
-    public String lerJSON(File filename) throws IOException {
+    public String lerJSON(File filename) throws IOException, FileNotFoundException {
         FileReader reader = new FileReader(filename);
         BufferedReader buffer = new BufferedReader(reader);
         String line = "";

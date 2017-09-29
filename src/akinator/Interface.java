@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.primefaces.json.JSONException;
-import org.primefaces.json.JSONObject;
 
 /**
  *
@@ -33,7 +32,7 @@ public class Interface {
     String[] simNaoNaoSeiOptions = {"Sim", "Não", "Não sei"};
     String[] simNaoOptions = {"Sim", "Não"};
 
-    public void começarJogo(JSONObject jsonPersonagens, JSONObject jsonPerguntas) {
+    public void começarJogo() {
         this.algoritmo = new Algoritmo();
         this.jsonSingleton = new JsonSingleton();
 
