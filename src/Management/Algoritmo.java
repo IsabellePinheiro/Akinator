@@ -36,7 +36,7 @@ public class Algoritmo {
         responseByResponseCode.put(2, "não sei");
     }
 
-    public String getResponseByCode(String code) {
+    public String getResponseByCode(int code) {
         return responseByResponseCode.get(code);
     }
 
