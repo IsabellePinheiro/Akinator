@@ -19,7 +19,7 @@ public class JsonReader {
      * @throws IOException 
      * @throws java.io.FileNotFoundException 
      */
-    public String lerJSON(File filename) throws IOException, FileNotFoundException {
+    public String lerJSONBaseConhecimento(File filename) throws IOException, FileNotFoundException {
         FileReader reader = new FileReader(filename);
         BufferedReader buffer = new BufferedReader(reader);
         String line = "";

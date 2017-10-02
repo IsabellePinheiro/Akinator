@@ -1,10 +1,7 @@
 package Management;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
 
@@ -15,6 +12,7 @@ public class JsonSingleton {
     private JSONArray jsonEstatisticas;
     private JsonReader jsonReader;
     private JsonWriter jsonWriter;
+    
 
     public final String jsonStatsFile = "src/resources/data/estatisticas.json";
     public final String jsonPersonagensFile = "src/resources/data/personagens.json";
@@ -47,7 +45,7 @@ public class JsonSingleton {
                 fileName.createNewFile();
                 this.jsonWriter.writeJson("[{}]", fileName.getPath());
             }
-            jsonString = jsonReader.lerJSON(fileName);
+            jsonString = jsonReader.lerJSONBaseConhecimento(fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -56,8 +54,8 @@ public class JsonSingleton {
 
     public void iniciaJSONs() {
         try {
-            this.setJsonPerguntas(new JSONArray(jsonReader.lerJSON(new File(jsonPerguntasFile))));
-            this.setJsonPersonagens(new JSONArray(jsonReader.lerJSON(new File(jsonPersonagensFile))));
+            this.setJsonPerguntas(new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(jsonPerguntasFile))));
+            this.setJsonPersonagens(new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(jsonPersonagensFile))));
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

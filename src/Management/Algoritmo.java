@@ -23,12 +23,12 @@ public class Algoritmo {
     /*
 	 * Lista de personagens que não correspondem as perguntas feitas
      */
-    private static ArrayList<String> listPersosEliminados = new ArrayList<String>();
+    private static final ArrayList<String> listPersosEliminados = new ArrayList<String>();
 
     /*
         * Resposta por código da resposta
      */
-    private static HashMap<Integer, String> responseByResponseCode = new HashMap<Integer, String>();
+    private static final HashMap<Integer, String> responseByResponseCode = new HashMap<Integer, String>();
 
     static {
         responseByResponseCode.put(0, "sim");
@@ -36,14 +36,14 @@ public class Algoritmo {
         responseByResponseCode.put(2, "não sei");
     }
 
-    public String getResponseByCode(int code) {
-        return responseByResponseCode.get(code);
+    public String getRespostaPorChave(int chave) {
+        return responseByResponseCode.get(chave);
     }
 
     /*
 	 * Lista de personagens com suas pontuações
      */
-    private static HashMap<String, Double> pontuacaoPersonagens = new HashMap<String, Double>();
+    private static final HashMap<String, Double> pontuacaoPersonagens = new HashMap<String, Double>();
     /*
 	 * Intancia da classe gerenciadora de JSONs
      */
@@ -142,26 +142,24 @@ public class Algoritmo {
      * @param respostaJogador
      * @throws JSONException
      */
-    public void calculaPontuacaoParaPersonagens(String chave, int respostaJogadorCode) throws JSONException {
+    public void calculaPontuacaoParaPersonagens(Integer chave, int respostaJogadorCode) throws JSONException {
         JSONArray personagens = jsonUtils.getSingleton().getJsonPersonagens();
         String respostaJogador = responseByResponseCode.get(respostaJogadorCode);
 
         for (int i = 0; i < personagens.length(); ++i) {
 
             JSONObject personagem = personagens.getJSONObject(i);
-            String resposta = personagem.getString(chave);
+            String resposta = personagem.getString(chave.toString());
             String nomePersonagem = personagem.getString("Personagem");
 
             double pontuacao = getPontuacao(respostaJogador, resposta);
 
-            //On vérifie si le perso a déjà un score
+            //Atualiza pontuação
             if (pontuacaoPersonagens.containsKey(nomePersonagem)) {
                 pontuacao += pontuacaoPersonagens.get(nomePersonagem);
             }
             pontuacaoPersonagens.put(nomePersonagem, pontuacao);
-
         }
-
     }
 
     /**
@@ -187,7 +185,7 @@ public class Algoritmo {
      * @param chave
      * @throws JSONException 
      */
-    public void eliminaPergunta(String chave) throws JSONException {
+    public void eliminaPergunta(Integer chave) throws JSONException {
         jsonUtils.excluiPerguntaPorChave(chave);
     }
 

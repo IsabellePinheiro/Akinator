@@ -15,8 +15,9 @@ public class JsonUtils {
     private JsonSingleton jsonSingleton;
 
     public JsonSingleton getSingleton() {
-        if(this.jsonSingleton == null)
+        if (this.jsonSingleton == null) {
             this.jsonSingleton = new JsonSingleton();
+        }
         return jsonSingleton;
     }
 
@@ -61,14 +62,14 @@ public class JsonUtils {
     /**
      * Adiciona nova pergunta em JSON de perguntas
      *
-     * @param key
-     * @param value
+     * @param chave
+     * @param pergunta
      * @throws JSONException
      */
-    public void adicionaPergunta(String key, String value) throws JSONException {
+    public void adicionaPergunta(Integer chave, String pergunta) throws JSONException {
         JSONArray newJsonArray = jsonSingleton.getJsonPerguntas();
 
-        newJsonArray.getJSONObject(0).put(key, value);
+        newJsonArray.getJSONObject(0).put(chave.toString(), pergunta);
         jsonSingleton.setJsonPerguntas(newJsonArray);
     }
 
@@ -155,9 +156,9 @@ public class JsonUtils {
      * @param chave
      * @throws JSONException
      */
-    public void excluiPerguntaPorChave(String chave) throws JSONException {
+    public void excluiPerguntaPorChave(Integer chave) throws JSONException {
         JSONArray arrayTemp = jsonSingleton.getJsonPerguntas();
-        arrayTemp.getJSONObject(0).remove(chave);
+        arrayTemp.getJSONObject(0).remove(chave.toString());
         jsonSingleton.setJsonPerguntas(arrayTemp);
     }
 
@@ -173,7 +174,7 @@ public class JsonUtils {
     public boolean personagemJaExiste(String nome) throws JSONException, IOException {
         boolean response = false;
         JsonReader jsonReader = new JsonReader();
-        JSONArray personagens = new JSONArray(jsonReader.lerJSON(new File(jsonSingleton.jsonPersonagensFile)));
+        JSONArray personagens = new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(jsonSingleton.jsonPersonagensFile)));
 
         for (int i = 0; i < personagens.length(); i++) {
             JSONObject personagem = null;
@@ -192,4 +193,16 @@ public class JsonUtils {
         }
         return response;
     }
+
+    public Integer getNovaChave() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public JsonSingleton getJsonSingleton() {
+        if (jsonSingleton == null) {
+            jsonSingleton = new JsonSingleton();
+        }
+        return jsonSingleton;
+    }
+
 }
