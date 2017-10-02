@@ -3,6 +3,8 @@ package Management;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
@@ -51,7 +53,6 @@ public class JsonUtils {
      *
      * @param personagem JSONObject representando personagem já com suas
      * perguntas
-     * @throws IOException
      */
     public void adicionaPersonagem(JSONObject personagem) {
         JSONArray newArray = jsonSingleton.getJsonPersonagens();
@@ -67,8 +68,7 @@ public class JsonUtils {
      * @throws JSONException
      */
     public void adicionaPergunta(Integer chave, String pergunta) throws JSONException {
-        JSONArray newJsonArray = jsonSingleton.getJsonPerguntas();
-
+        JSONArray newJsonArray = jsonSingleton.getJsonBasePerguntas();
         newJsonArray.getJSONObject(0).put(chave.toString(), pergunta);
         jsonSingleton.setJsonPerguntas(newJsonArray);
     }
@@ -157,9 +157,7 @@ public class JsonUtils {
      * @throws JSONException
      */
     public void excluiPerguntaPorChave(Integer chave) throws JSONException {
-        JSONArray arrayTemp = jsonSingleton.getJsonPerguntas();
-        arrayTemp.getJSONObject(0).remove(chave.toString());
-        jsonSingleton.setJsonPerguntas(arrayTemp);
+        jsonSingleton.getJsonPerguntas().getJSONObject(0).remove(chave.toString());
     }
 
     /**
@@ -195,7 +193,12 @@ public class JsonUtils {
     }
 
     public Integer getNovaChave() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            return jsonSingleton.getJsonBasePerguntas().getJSONObject(0).length();
+        } catch (JSONException ex) {
+            Logger.getLogger(JsonUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     public JsonSingleton getJsonSingleton() {

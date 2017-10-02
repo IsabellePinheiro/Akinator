@@ -33,10 +33,10 @@ public class Algoritmo {
     static {
         responseByResponseCode.put(0, "sim");
         responseByResponseCode.put(1, "não");
-        responseByResponseCode.put(2, "não sei");
+        responseByResponseCode.put(2, "desconhecido");
     }
 
-    public String getRespostaPorChave(int chave) {
+    public String getRespostaPorCodigo(int chave) {
         return responseByResponseCode.get(chave);
     }
 
@@ -47,7 +47,7 @@ public class Algoritmo {
     /*
 	 * Intancia da classe gerenciadora de JSONs
      */
-    private static JsonUtils jsonUtils = new JsonUtils();
+    public static JsonUtils jsonUtils = new JsonUtils();
 
     //Quantidade mínima de perguntas antes de propor um resultado
     public final int QUESTIONS_THRESOLD = 5;

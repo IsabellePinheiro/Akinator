@@ -12,13 +12,15 @@ public class JsonSingleton {
     private JSONArray jsonEstatisticas;
     private JsonReader jsonReader;
     private JsonWriter jsonWriter;
-    
+
+    private JSONArray jsonBasePersos;
+    private JSONArray jsonBasePerguntas;
+    private JSONArray jsonBaseStats;
 
     public final String jsonStatsFile = "src/resources/data/estatisticas.json";
     public final String jsonPersonagensFile = "src/resources/data/personagens.json";
     public final String jsonPerguntasFile = "src/resources/data/perguntas.json";
 
-    
     public JsonSingleton() {
         this.jsonReader = new JsonReader();
         this.jsonWriter = new JsonWriter();
@@ -27,8 +29,11 @@ public class JsonSingleton {
         String jsonStringStats = getJson(new File(jsonStatsFile));
         try {
             this.jsonPersonagens = new JSONArray(jsonStringPersos);
+            this.jsonBasePersos = new JSONArray(jsonStringPersos);
             this.jsonPerguntas = new JSONArray(jsonStringPerguntas);
+            this.jsonBasePerguntas = new JSONArray(jsonStringPerguntas);
             this.jsonEstatisticas = new JSONArray(jsonStringStats);
+            this.jsonBaseStats = new JSONArray(jsonStringStats);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -41,7 +46,7 @@ public class JsonSingleton {
     private String getJson(File fileName) {
         String jsonString = "";
         try {
-            if(!fileName.exists()){
+            if (!fileName.exists()) {
                 fileName.createNewFile();
                 this.jsonWriter.writeJson("[{}]", fileName.getPath());
             }
@@ -60,10 +65,11 @@ public class JsonSingleton {
             e.printStackTrace();
         }
     }
-    
+
     /**
      * Retorna JSON das estatísticas
-     * @return 
+     *
+     * @return
      */
     public JSONArray getJsonEstatisticas() {
         return jsonEstatisticas != null ? jsonEstatisticas : new JSONArray();
@@ -71,7 +77,8 @@ public class JsonSingleton {
 
     /**
      * Retorna JSON dos personagens
-     * @return 
+     *
+     * @return
      */
     public JSONArray getJsonPersonagens() {
         return jsonPersonagens;
@@ -79,7 +86,8 @@ public class JsonSingleton {
 
     /**
      * Retorna JSON das perguntas
-     * @return 
+     *
+     * @return
      */
     public JSONArray getJsonPerguntas() {
         return jsonPerguntas;
@@ -96,4 +104,17 @@ public class JsonSingleton {
     public int getPerguntasRestantes() throws JSONException {
         return jsonPerguntas.getJSONObject(0).length();
     }
+
+    public JSONArray getJsonBasePersos() {
+        return jsonBasePersos;
+    }
+
+    public JSONArray getJsonBasePerguntas() {
+        return jsonBasePerguntas;
+    }
+
+    public JSONArray getJsonBaseStats() {
+        return jsonBaseStats;
+    }
+
 }
