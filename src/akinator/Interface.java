@@ -209,7 +209,7 @@ public class Interface {
                     Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 //Insere dados de estatisticas
-                statsManager.insereJogo(algoritmo.getPersonagemMaiorPontuacao(), new Date(), false);
+                statsManager.insereJogo(personagem, new Date(), false);
             } 
         }
     }
@@ -218,7 +218,7 @@ public class Interface {
         JOptionPane.showMessageDialog(null, "Esse jogo já foi jogado " + statsManager.getQtdJogada() + " vezes!");
         JOptionPane.showMessageDialog(null, "Sendo que consegui adivinhar o personagem " + statsManager.getQtdJogosGanhos()+ " vezes!");
         try {
-            JOptionPane.showMessageDialog(null, "O personagem que os jogadores mais pensam é o(a): " + statsManager.getPersonagemMaisJogado().get("Personagem"));
+            JOptionPane.showMessageDialog(null, "O personagem que os jogadores mais pensam é o(a): " + statsManager.getPersonagemMaisJogado().get("personagem"));
         } catch (JSONException ex) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
         }
