@@ -21,7 +21,7 @@ public class JogoStatsManager {
     public JogoStatsManager() {
         jsonWriter = new JsonWriter();
         jsonSingleton = new JsonSingleton();
-        fillListStatsCharacters();
+        preencheEstatisticasPersonagem();
     }
 
     public ArrayList<JSONObject> getListStatsPersonagens() {
@@ -47,13 +47,11 @@ public class JogoStatsManager {
     }
 
     /**
-     * Insert a new Game played into the Stats list with all games played
+     * Insere um novo jogo ao arquivo de estatisticas
      *
-     * @param personagem The character name
-     * @param data The date when the game has been played
-     * @param achou True if Akinator found the character (he won)
-     * false otherwise
-     *
+     * @param personagem 
+     * @param data 
+     * @param achou 
      */
     public void insereJogo(String personagem, Date data, boolean achou) {
         JSONArray stats = jsonSingleton.getJsonEstatisticas();
@@ -120,10 +118,9 @@ public class JogoStatsManager {
     }
 
     /**
-     * Method which fill in memory the list of stats for every character
-     *
+     * Preenche lista de estatisticas de todos os jogos
      */
-    private void fillListStatsCharacters() {
+    private void preencheEstatisticasPersonagem() {
         JSONArray jsonStats = jsonSingleton.getJsonEstatisticas();
         JSONArray jsonPersonagens = jsonSingleton.getJsonPersonagens();
 
@@ -160,10 +157,8 @@ public class JogoStatsManager {
     }
 
     /**
-     * Method to get the last game played in all gamed recorded
-     *
-     * @return JSONObject an object representing the last game with its details
-     *
+     * Retorna dados do último jogo
+     * @return 
      */
     public JSONObject getUltimoJogo() {
         JSONArray jsonStats = jsonSingleton.getJsonEstatisticas();

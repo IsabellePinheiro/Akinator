@@ -50,14 +50,14 @@ public class Algoritmo {
     public static JsonUtils jsonUtils = new JsonUtils();
 
     //Quantidade mínima de perguntas antes de propor um resultado
-    public final int QUESTIONS_THRESOLD = 5;
+    public final int QUESTIONS_THRESOLD = 10;
 
     /*
 	 * Pontuação mínima para poder propor uma resultado
      */
-    private final int PROPOSAL_THRESOLD = 80;
+    private final int PROPOSAL_THRESOLD = 90;
 
-    public void resetAllData() {
+    public void novoJogo() {
         if (!pontuacaoPersonagens.isEmpty()) {
             pontuacaoPersonagens.clear();
         }

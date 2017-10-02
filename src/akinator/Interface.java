@@ -8,14 +8,11 @@ package akinator;
 import Management.Algoritmo;
 import Management.JogoStatsManager;
 import Management.JsonReader;
-import Management.JsonUtils;
 import Management.JsonWriter;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,7 +59,10 @@ public class Interface {
         } catch (JSONException e) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
         }
+
         goToResultActivity();
+        acabaJogo();
+        
         gerarEstatisticas();
     }
 
@@ -99,7 +99,6 @@ public class Interface {
 
         // Elimina pergunta que já foi feita
         try {
-
             algoritmo.eliminaPergunta(chavePerguntaAtual);
         } catch (JSONException e) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
@@ -110,6 +109,11 @@ public class Interface {
         this.hashMapPerguntaResposta.put(chavePerguntaAtual, respostaJogador);
     }
 
+    /**
+     * Retorna 0 caso o jogo acertou e 1 caso não acertou
+     *
+     * @return
+     */
     private void goToResultActivity() {
         statsManager = new JogoStatsManager();
 
@@ -119,6 +123,7 @@ public class Interface {
             statsManager.insereJogo(algoritmo.getPersonagemMaiorPontuacao(), new Date(), true);
         } else {
             algoritmo.eliminaPersonagemListaPontuacao(algoritmo.getPersonagemMaiorPontuacao());
+            //TODO: continuar jogando
             try {
                 proximaProposta();
             } catch (JSONException ex) {
@@ -137,27 +142,62 @@ public class Interface {
                     "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, simNaoOptions, simNaoOptions[0]);
             //String namePerso = algoritmo.getPersonagemMaiorPontuacao().replaceAll("\\s+", "").replaceAll("'", "").replace("-", "");
         }
-        return 0;
+        return -1;
     }
 
+    /**
+     * Retorna 0 quando achar, 2 caso nunca ache o ersonagem desejado
+     *
+     * @return Usado apenas para a chamada recursiva
+     * @throws JSONException
+     */
     private void proximaProposta() throws JSONException {
+        //Caso já existam personagens com % de acerto acima da constante PROPOSAL_THRESOLD
         if (algoritmo.existePersonagemParaPropor(qtdPerguntasFeitas)) {
-            proporResultado();
+            int acertou = proporResultado();
+
+            if (acertou == 0) {
+                statsManager.insereJogo(algoritmo.getPersonagemMaiorPontuacao(), new Date(), true);
+            } else {
+                algoritmo.eliminaPersonagemListaPontuacao(algoritmo.getPersonagemMaiorPontuacao());
+                try {
+                    proximaProposta();
+                } catch (JSONException ex) {
+                    Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        
+        //Caso algum personagem já foi proposto mas não acertou e ainda há perguntas para fazer
         } else if (Algoritmo.jsonUtils.getJsonSingleton().getPerguntasRestantes() > 0) {
-            mostrarPergunta();
+            algoritmo.eliminaPersonagemListaPontuacao(algoritmo.getPersonagemMaiorPontuacao());
+            try {
+                while (Algoritmo.jsonUtils.getJsonSingleton().getPerguntasRestantes() > 0
+                        && ((qtdPerguntasFeitas < algoritmo.QUESTIONS_THRESOLD) || (!algoritmo.existePersonagemParaPropor(qtdPerguntasFeitas)))) {
+                    mostrarPergunta();
+                    if (contadorNaoSei == 5) {
+                        break;
+                    }
+                }
+            } catch (JSONException e) {
+                Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
+            }
+
+            goToResultActivity();
+
+        //Acabou as propostas e também as perguntas
         } else {
             JOptionPane.showMessageDialog(null, "Ok eu admito a minha derrota!", "", JOptionPane.ERROR_MESSAGE);
             int aprende = JOptionPane.showOptionDialog(null, "Voce poderia me deixar mais inteligente?", "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
                     simNaoOptions, simNaoOptions[0]);
             if (aprende == 0) {
-                    String personagem = JOptionPane.showInputDialog(null, "Legal! Você poderia me dizer qual personagem estava pensando?");
-                    String pergunta;
-                    int resposta;
-                    do {
-                        pergunta = pedirPergunta();
-                        resposta = pedirResposta();
-                    } while (resposta == 2);
-                    
+                String personagem = JOptionPane.showInputDialog(null, "Legal! Você poderia me dizer qual personagem estava pensando?");
+                String pergunta;
+                int resposta;
+                do {
+                    pergunta = pedirPergunta();
+                    resposta = pedirResposta();
+                } while (resposta == 2);
+
                 try {
                     //Verifica se personagem já existe na base de conhecimento
                     if (Algoritmo.jsonUtils.personagemJaExiste(personagem.toUpperCase())) {
@@ -168,18 +208,31 @@ public class Interface {
                 } catch (IOException ex) {
                     Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } else {
-                acabaJogo();
-            }
+                //Insere dados de estatisticas
+                statsManager.insereJogo(algoritmo.getPersonagemMaiorPontuacao(), new Date(), false);
+            } 
         }
     }
 
     private void gerarEstatisticas() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        JOptionPane.showMessageDialog(null, "Esse jogo já foi jogado " + statsManager.getQtdJogada() + " vezes!");
+        JOptionPane.showMessageDialog(null, "Sendo que consegui adivinhar o personagem " + statsManager.getQtdJogosGanhos()+ " vezes!");
+        try {
+            JOptionPane.showMessageDialog(null, "O personagem que os jogadores mais pensam é o(a): " + statsManager.getPersonagemMaisJogado().get("Personagem"));
+        } catch (JSONException ex) {
+            Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     private void acabaJogo() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        int novoJogo = JOptionPane.showOptionDialog(null, "Deseja jogar novamente?", "Novo jogo!", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+                simNaoOptions, simNaoOptions[0]);
+        
+        if(novoJogo == 0){
+            algoritmo.novoJogo();
+            começarJogo();
+        }
     }
 
     private String pedirPergunta() {
@@ -190,21 +243,21 @@ public class Interface {
         return JOptionPane.showOptionDialog(null, "E qual seria a resposta?", "", JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
                 simNaoVoltarOptions, simNaoVoltarOptions[0]);
     }
-    
+
     private void adicionaNovoPersonagem(String nomePersonagem, Integer chaveNovaPergunta, String novaPergunta, int respotaNovaPergunta) {
         // Cria novo personagem
         JSONObject novoPersonagem = new JSONObject();
         // Adiciona respostas dadas para as perguntas anteiores
         for (Map.Entry<Integer, Integer> entry : hashMapPerguntaResposta.entrySet()) {
-            Integer chavePergunta =  entry.getKey();
+            Integer chavePergunta = entry.getKey();
             int resposta = entry.getValue();
             try {
-                novoPersonagem.put(chavePergunta .toString(), algoritmo.getRespostaPorCodigo(resposta));
+                novoPersonagem.put(chavePergunta.toString(), algoritmo.getRespostaPorCodigo(resposta));
             } catch (JSONException e) {
                 Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
             }
         }
-        
+
         // Colocar nome do personagem
         try {
             novoPersonagem.put("Personagem", nomePersonagem.toUpperCase());
@@ -217,7 +270,6 @@ public class Interface {
             Algoritmo.jsonUtils.adicionaPergunta(chaveNovaPergunta, novaPergunta);
             novoPersonagem.put(chaveNovaPergunta.toString(), algoritmo.getRespostaPorCodigo(respotaNovaPergunta));
 
-            
             //Preenche com desconhecido em todos os personagens que já estão na base de conhecimento
             JSONArray novoJSONPersonagens = new JSONArray();
             JSONArray personagensConhecidos = new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(Algoritmo.jsonUtils.getJsonSingleton().jsonPersonagensFile)));
@@ -228,24 +280,23 @@ public class Interface {
                 novoJSONPersonagens.put(perso);
             }
             Algoritmo.jsonUtils.getJsonSingleton().setJsonPersonagens(novoJSONPersonagens);
-        }catch (JSONException | IOException e) {
+        } catch (JSONException | IOException e) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
         }
-        
-        
+
         Algoritmo.jsonUtils.adicionaPersonagem(novoPersonagem);
 
         try {
             // Escreve novo JSON de personagens na base de conhecimento
-            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPersonagens().toString(),Algoritmo.jsonUtils.getJsonSingleton().jsonPersonagensFile);
+            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPersonagens().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPersonagensFile);
             // Escreve novo JSON de perguntas na base de conhecimento
-            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPerguntas().toString(),Algoritmo.jsonUtils.getJsonSingleton().jsonPerguntasFile);
+            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPerguntas().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPerguntasFile);
         } catch (IOException e) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
         }
 
     }
-    
+
     private void atualizaPersonagemExistente(String nomePersonagem, Integer chaveNovaPergunta, String novaPergunta, int respostaNovaPergunta) throws JSONException, IOException {
         //Se personagem já existe, informações desconhecidas anteriormente devem ser inseridas
         //Respostas são buscadas pelas respostas dadas durante o jogo
@@ -261,23 +312,21 @@ public class Interface {
                     jsonPersonagem.put(chave.toString(), algoritmo.getRespostaPorCodigo(resposta));
                 }
             }
-            
-            
+
             //Adiciona pergunta nova
             jsonPersonagem.put(chaveNovaPergunta.toString(), algoritmo.getRespostaPorCodigo(respostaNovaPergunta));
-            
+
             //json Character with this perso
             //First delete perso to refill it
             Algoritmo.jsonUtils.excluiPersonagemPorNome(nomePersonagem.toUpperCase());
             Algoritmo.jsonUtils.adicionaPersonagem(jsonPersonagem);
-            
+
             //Escreve novo JSON na base de conhecimento
             jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPersonagens().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPersonagensFile);
-            
-            
+
             //Escreve nova pergunta na base de conhecimento
             Algoritmo.jsonUtils.adicionaPergunta(chaveNovaPergunta, novaPergunta);
-            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPerguntas().toString(),Algoritmo.jsonUtils.getJsonSingleton().jsonPerguntasFile);
+            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPerguntas().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPerguntasFile);
         }
     }
 }
