@@ -220,7 +220,8 @@ public class Interface {
 
     private void gerarEstatisticas() {
         JOptionPane.showMessageDialog(null, "Esse jogo já foi jogado " + statsManager.getQtdJogada() + " vezes!");
-        JOptionPane.showMessageDialog(null, "Sendo que consegui adivinhar o personagem " + statsManager.getQtdJogosGanhos()+ " vezes!");
+        JOptionPane.showMessageDialog(null, "Sendo que consegui adivinhar o personagem " + statsManager.getQtdJogosGanhos()+ " vezes!\n\n\n" 
+                + "("+ (statsManager.getQtdJogosGanhos()*1.00/statsManager.getQtdJogada())*100 + "% de acerto)");
         try {
             JOptionPane.showMessageDialog(null, "O personagem que os jogadores mais pensam é o(a): " + statsManager.getPersonagemMaisJogado().get("personagem"));
         } catch (JSONException ex) {

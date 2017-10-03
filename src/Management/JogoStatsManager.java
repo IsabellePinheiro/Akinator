@@ -75,7 +75,7 @@ public class JogoStatsManager {
      *
      * @return int
      */
-    public int getQtdJogada() {
+    public Integer getQtdJogada() {
         JSONArray jsonStats = jsonSingleton.getJsonEstatisticas();
         if (jsonStats == null) {
             return 0;
@@ -88,7 +88,7 @@ public class JogoStatsManager {
      *
      * @return int
      */
-    public int getQtdJogosGanhos() {
+    public Integer getQtdJogosGanhos() {
         JSONArray jsonStats = jsonSingleton.getJsonEstatisticas();
         int qtdAchou = 0;
         for (int i = 0; i < jsonStats.length(); i++) {
