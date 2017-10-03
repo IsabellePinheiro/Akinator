@@ -209,7 +209,7 @@ public class Interface {
                     Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 //Insere dados de estatisticas
-                statsManager.insereJogo(personagem, new Date(), false);
+                statsManager.insereJogo(personagem.toUpperCase(), new Date(), false);
             } 
         }
     }
@@ -223,6 +223,8 @@ public class Interface {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        //Comando necessário para não mostrar estatísticas para cada chamada recursiva do método começarJogo();
+        System.exit(0);
     }
 
     private void acabaJogo() {
@@ -294,7 +296,6 @@ public class Interface {
         } catch (IOException e) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
         }
-
     }
 
     private void atualizaPersonagemExistente(String nomePersonagem, Integer chaveNovaPergunta, String novaPergunta, int respostaNovaPergunta) throws JSONException, IOException {
