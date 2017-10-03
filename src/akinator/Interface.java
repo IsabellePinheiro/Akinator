@@ -29,21 +29,25 @@ public class Interface {
 
     private String perguntaAtual;
     private Integer chaveAtual;
-    private final HashMap<Integer, Integer> hashMapPerguntaResposta = new HashMap<>();
+    private HashMap<Integer, Integer> hashMapPerguntaResposta;
     private JsonWriter jsonWriter;
     private JsonReader jsonReader;
-    private int qtdPerguntasFeitas = 0;
+    private int qtdPerguntasFeitas;
     private Algoritmo algoritmo;
     private JogoStatsManager statsManager;
-    private int contadorNaoSei = 0;
+    private int contadorNaoSei;
     String[] simNaoNaoSeiOptions = {"Sim", "Não", "Não sei"};
     String[] simNaoOptions = {"Sim", "Não"};
     String[] simNaoVoltarOptions = {"Sim", "Não", "Voltar"};
 
     public void começarJogo() {
+        //inicializa variáveis
         this.algoritmo = new Algoritmo();
         this.jsonReader = new JsonReader();
         this.jsonWriter = new JsonWriter();
+        this.qtdPerguntasFeitas = 0;
+        this.contadorNaoSei = 0;
+        this.hashMapPerguntaResposta = new HashMap<>();
         /*
             * Número mínimo de perguntas ainda não atingiu o mínimo 
             * OU ainda não há personagens para propor E se ainda há perguntas
