@@ -14,13 +14,13 @@ import org.primefaces.json.JSONObject;
  */
 public class JsonUtils {
 
-    private JsonSingleton jsonSingleton;
+    private JsonBaseConhecimento jsonBaseConhecimento;
 
-    public JsonSingleton getSingleton() {
-        if (this.jsonSingleton == null) {
-            this.jsonSingleton = new JsonSingleton();
+    public JsonBaseConhecimento getSingleton() {
+        if (this.jsonBaseConhecimento == null) {
+            this.jsonBaseConhecimento = new JsonBaseConhecimento();
         }
-        return jsonSingleton;
+        return jsonBaseConhecimento;
     }
 
     /**
@@ -35,7 +35,7 @@ public class JsonUtils {
     public JSONArray buscaPersonagensPorChavePergunta(String chave, String respostaEsperada) throws JSONException {
         JSONArray personagensArray = new JSONArray();
         // Carrega personagens
-        JSONArray personagens = jsonSingleton.getJsonPersonagens();
+        JSONArray personagens = jsonBaseConhecimento.getJsonPersonagens();
 
         // Seleciona personagens que tenham a resposta esperada para a pergunta
         for (int i = 0; i < personagens.length(); i++) {
@@ -55,9 +55,9 @@ public class JsonUtils {
      * perguntas
      */
     public void adicionaPersonagem(JSONObject personagem) {
-        JSONArray newArray = jsonSingleton.getJsonPersonagens();
+        JSONArray newArray = jsonBaseConhecimento.getJsonPersonagens();
         newArray.put(personagem);
-        jsonSingleton.setJsonPersonagens(newArray);
+        jsonBaseConhecimento.setJsonPersonagens(newArray);
     }
 
     /**
@@ -68,9 +68,9 @@ public class JsonUtils {
      * @throws JSONException
      */
     public void adicionaPergunta(Integer chave, String pergunta) throws JSONException {
-        JSONArray newJsonArray = jsonSingleton.getJsonBasePerguntas();
+        JSONArray newJsonArray = jsonBaseConhecimento.getJsonBasePerguntas();
         newJsonArray.getJSONObject(0).put(chave.toString(), pergunta);
-        jsonSingleton.setJsonPerguntas(newJsonArray);
+        jsonBaseConhecimento.setJsonPerguntas(newJsonArray);
     }
 
     /**
@@ -81,7 +81,7 @@ public class JsonUtils {
      * @throws JSONException
      */
     public String getPergunta(String chave) throws JSONException {
-        return jsonSingleton.getJsonPerguntas().getJSONObject(0).getString(chave);
+        return jsonBaseConhecimento.getJsonPerguntas().getJSONObject(0).getString(chave);
     }
 
     /**
@@ -93,8 +93,8 @@ public class JsonUtils {
      */
     public JSONObject getPersonagemPorNome(String nome) throws JSONException {
         JSONObject personagemRetorno = null;
-        for (int i = 0; i < jsonSingleton.getJsonPersonagens().length(); i++) {
-            JSONObject personagem = jsonSingleton.getJsonPersonagens().getJSONObject(i);
+        for (int i = 0; i < jsonBaseConhecimento.getJsonPersonagens().length(); i++) {
+            JSONObject personagem = jsonBaseConhecimento.getJsonPersonagens().getJSONObject(i);
             String nomePersonagem = personagem.getString("Personagem");
             if (nomePersonagem.equals(nome)) {
                 personagemRetorno = personagem;
@@ -112,22 +112,22 @@ public class JsonUtils {
      */
     public void excluiPersonagemPorNome(String nome) throws JSONException {
         JSONArray arrayTemp = new JSONArray();
-        for (int i = 0; i < jsonSingleton.getJsonPersonagens().length(); i++) {
-            JSONObject personagem = jsonSingleton.getJsonPersonagens().getJSONObject(i);
+        for (int i = 0; i < jsonBaseConhecimento.getJsonPersonagens().length(); i++) {
+            JSONObject personagem = jsonBaseConhecimento.getJsonPersonagens().getJSONObject(i);
             String nomePersonagem = personagem.getString("Personagem");
             if (!nomePersonagem.equals(nome)) {
                 arrayTemp.put(personagem);
             }
         }
-        jsonSingleton.setJsonPersonagens(arrayTemp);
+        jsonBaseConhecimento.setJsonPersonagens(arrayTemp);
     }
 
     public JSONArray getJsonPerguntas() {
-        return jsonSingleton.getJsonPerguntas();
+        return jsonBaseConhecimento.getJsonPerguntas();
     }
 
     public JSONArray getJsonPersonagens() {
-        return jsonSingleton.getJsonPersonagens();
+        return jsonBaseConhecimento.getJsonPersonagens();
     }
 
     /**
@@ -139,15 +139,15 @@ public class JsonUtils {
     public void excluiPersonagens(ArrayList<String> nomesPersonagens) throws JSONException {
         JSONArray arrayTemp = new JSONArray();
         for (String nome : nomesPersonagens) {
-            for (int i = 0; i < jsonSingleton.getJsonPersonagens().length(); i++) {
-                JSONObject personagem = jsonSingleton.getJsonPersonagens().getJSONObject(i);
+            for (int i = 0; i < jsonBaseConhecimento.getJsonPersonagens().length(); i++) {
+                JSONObject personagem = jsonBaseConhecimento.getJsonPersonagens().getJSONObject(i);
                 String nomePersonagem = personagem.getString("Personagem");
                 if (!nomePersonagem.equals(nome)) {
                     arrayTemp.put(personagem);
                 }
             }
         }
-        jsonSingleton.setJsonPersonagens(arrayTemp);
+        jsonBaseConhecimento.setJsonPersonagens(arrayTemp);
     }
 
     /**
@@ -157,7 +157,7 @@ public class JsonUtils {
      * @throws JSONException
      */
     public void excluiPerguntaPorChave(Integer chave) throws JSONException {
-        jsonSingleton.getJsonPerguntas().getJSONObject(0).remove(chave.toString());
+        jsonBaseConhecimento.getJsonPerguntas().getJSONObject(0).remove(chave.toString());
     }
 
     /**
@@ -172,7 +172,7 @@ public class JsonUtils {
     public boolean personagemJaExiste(String nome) throws JSONException, IOException {
         boolean response = false;
         JsonReader jsonReader = new JsonReader();
-        JSONArray personagens = new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(jsonSingleton.jsonPersonagensFile)));
+        JSONArray personagens = new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(jsonBaseConhecimento.jsonPersonagensFile)));
 
         for (int i = 0; i < personagens.length(); i++) {
             JSONObject personagem = null;
@@ -194,18 +194,18 @@ public class JsonUtils {
 
     public Integer getNovaChave() {
         try {
-            return jsonSingleton.getJsonBasePerguntas().getJSONObject(0).length();
+            return jsonBaseConhecimento.getJsonBasePerguntas().getJSONObject(0).length();
         } catch (JSONException ex) {
             Logger.getLogger(JsonUtils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
-    public JsonSingleton getJsonSingleton() {
-        if (jsonSingleton == null) {
-            jsonSingleton = new JsonSingleton();
+    public JsonBaseConhecimento getJsonBaseConhecimento() {
+        if (jsonBaseConhecimento == null) {
+            jsonBaseConhecimento = new JsonBaseConhecimento();
         }
-        return jsonSingleton;
+        return jsonBaseConhecimento;
     }
 
 }

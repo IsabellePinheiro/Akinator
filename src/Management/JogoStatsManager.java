@@ -13,14 +13,14 @@ import org.primefaces.json.JSONObject;
 public class JogoStatsManager {
 
     private final JsonWriter jsonWriter;
-    private final JsonSingleton jsonSingleton;
+    private final JsonBaseConhecimento jsonSingleton;
     
     //Lista contendo todas as estatísticas de todos os personagens
     private final ArrayList<JSONObject> listStatsPersonagens = new ArrayList<>();
 
     public JogoStatsManager() {
         jsonWriter = new JsonWriter();
-        jsonSingleton = new JsonSingleton();
+        jsonSingleton = new JsonBaseConhecimento();
         preencheEstatisticasPersonagem();
     }
 
