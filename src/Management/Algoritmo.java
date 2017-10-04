@@ -47,7 +47,7 @@ public class Algoritmo {
     /*
 	 * Intancia da classe gerenciadora de JSONs
      */
-    public static JsonUtils jsonUtils = new JsonUtils();
+    public JsonUtils jsonUtils = new JsonUtils();
 
     //Quantidade mínima de perguntas antes de propor um resultado
     public final int QUESTIONS_THRESOLD = 10;
@@ -56,6 +56,10 @@ public class Algoritmo {
 	 * Pontuação mínima para poder propor uma resultado
      */
     private final int PROPOSAL_THRESOLD = 90;
+
+    public Algoritmo() {
+        this.jsonUtils = new JsonUtils();
+    }
 
     public void novoJogo() {
         if (!pontuacaoPersonagens.isEmpty()) {
@@ -131,7 +135,7 @@ public class Algoritmo {
             }
 
         }
-        
+
         pergunta = jsonUtils.getPergunta(chaveMaisRestringente);
         return chaveMaisRestringente + ";" + pergunta;
     }
@@ -182,8 +186,9 @@ public class Algoritmo {
 
     /**
      * Elimina pergunta que já foi feita
+     *
      * @param chave
-     * @throws JSONException 
+     * @throws JSONException
      */
     public void eliminaPergunta(Integer chave) throws JSONException {
         jsonUtils.excluiPerguntaPorChave(chave);
@@ -307,5 +312,12 @@ public class Algoritmo {
             }
         }
         return existe;
+    }
+
+    public JsonUtils getJsonUtils() {
+        if(jsonUtils == null) {
+            return new JsonUtils();
+        }
+        return jsonUtils;
     }
 }

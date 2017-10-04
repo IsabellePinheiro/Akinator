@@ -53,7 +53,7 @@ public class Interface {
             * OU ainda não há personagens para propor E se ainda há perguntas
          */
         try {
-            while (Algoritmo.jsonUtils.getJsonSingleton().getPerguntasRestantes() > 0
+            while (algoritmo.getJsonUtils().getJsonSingleton().getPerguntasRestantes() > 0
                     && ((qtdPerguntasFeitas < algoritmo.QUESTIONS_THRESOLD) || (!algoritmo.existePersonagemParaPropor(qtdPerguntasFeitas)))) {
                 mostrarPergunta();
                 if (contadorNaoSei == 5) {
@@ -172,10 +172,10 @@ public class Interface {
             }
         
         //Caso algum personagem já foi proposto mas não acertou e ainda há perguntas para fazer
-        } else if (Algoritmo.jsonUtils.getJsonSingleton().getPerguntasRestantes() > 0) {
+        } else if (algoritmo.getJsonUtils().getJsonSingleton().getPerguntasRestantes() > 0) {
             algoritmo.eliminaPersonagemListaPontuacao(algoritmo.getPersonagemMaiorPontuacao());
             try {
-                while (Algoritmo.jsonUtils.getJsonSingleton().getPerguntasRestantes() > 0
+                while (algoritmo.getJsonUtils().getJsonSingleton().getPerguntasRestantes() > 0
                         && ((qtdPerguntasFeitas < algoritmo.QUESTIONS_THRESOLD) || (!algoritmo.existePersonagemParaPropor(qtdPerguntasFeitas)))) {
                     mostrarPergunta();
                     if (contadorNaoSei == 5) {
@@ -204,10 +204,10 @@ public class Interface {
 
                 try {
                     //Verifica se personagem já existe na base de conhecimento
-                    if (Algoritmo.jsonUtils.personagemJaExiste(personagem.toUpperCase())) {
-                        atualizaPersonagemExistente(personagem, Algoritmo.jsonUtils.getNovaChave(), pergunta, resposta);
+                    if (algoritmo.getJsonUtils().personagemJaExiste(personagem.toUpperCase())) {
+                        atualizaPersonagemExistente(personagem, algoritmo.getJsonUtils().getNovaChave(), pergunta, resposta);
                     } else {
-                        adicionaNovoPersonagem(personagem, Algoritmo.jsonUtils.getNovaChave(), pergunta, resposta);
+                        adicionaNovoPersonagem(personagem, algoritmo.getJsonUtils().getNovaChave(), pergunta, resposta);
                     }
                 } catch (IOException ex) {
                     Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, ex);
@@ -274,30 +274,30 @@ public class Interface {
 
         try {
             // Insere nova pergunta no JSON das perguntas e no novo personagem
-            Algoritmo.jsonUtils.adicionaPergunta(chaveNovaPergunta, novaPergunta);
+            algoritmo.getJsonUtils().adicionaPergunta(chaveNovaPergunta, novaPergunta);
             novoPersonagem.put(chaveNovaPergunta.toString(), algoritmo.getRespostaPorCodigo(respotaNovaPergunta));
 
             //Preenche com desconhecido em todos os personagens que já estão na base de conhecimento
             JSONArray novoJSONPersonagens = new JSONArray();
-            JSONArray personagensConhecidos = new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(Algoritmo.jsonUtils.getJsonSingleton().jsonPersonagensFile)));
+            JSONArray personagensConhecidos = new JSONArray(jsonReader.lerJSONBaseConhecimento(new File(algoritmo.getJsonUtils().getJsonSingleton().jsonPersonagensFile)));
             for (int i = 0; i < personagensConhecidos.length(); i++) {
                 JSONObject perso = personagensConhecidos.getJSONObject(i);
                 perso.put(chaveNovaPergunta.toString(), "desconhecido");
 
                 novoJSONPersonagens.put(perso);
             }
-            Algoritmo.jsonUtils.getJsonSingleton().setJsonPersonagens(novoJSONPersonagens);
+            algoritmo.getJsonUtils().getJsonSingleton().setJsonPersonagens(novoJSONPersonagens);
         } catch (JSONException | IOException e) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
         }
 
-        Algoritmo.jsonUtils.adicionaPersonagem(novoPersonagem);
+        algoritmo.getJsonUtils().adicionaPersonagem(novoPersonagem);
 
         try {
             // Escreve novo JSON de personagens na base de conhecimento
-            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPersonagens().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPersonagensFile);
+            jsonWriter.writeJson(algoritmo.getJsonUtils().getJsonPersonagens().toString(), algoritmo.getJsonUtils().getJsonSingleton().jsonPersonagensFile);
             // Escreve novo JSON de perguntas na base de conhecimento
-            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPerguntas().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPerguntasFile);
+            jsonWriter.writeJson(algoritmo.getJsonUtils().getJsonPerguntas().toString(), algoritmo.getJsonUtils().getJsonSingleton().jsonPerguntasFile);
         } catch (IOException e) {
             Logger.getLogger(Interface.class.getName()).log(Level.SEVERE, null, e);
         }
@@ -307,7 +307,7 @@ public class Interface {
         //Se personagem já existe, informações desconhecidas anteriormente devem ser inseridas
         //Respostas são buscadas pelas respostas dadas durante o jogo
         JSONObject jsonPersonagem = null;
-        jsonPersonagem = Algoritmo.jsonUtils.getPersonagemPorNome(nomePersonagem);
+        jsonPersonagem = algoritmo.getJsonUtils().getPersonagemPorNome(nomePersonagem);
         if (jsonPersonagem != null) {
             for (Map.Entry<Integer, Integer> entry : hashMapPerguntaResposta.entrySet()) {
                 Integer chave = entry.getKey();
@@ -324,15 +324,15 @@ public class Interface {
 
             //json Character with this perso
             //First delete perso to refill it
-            Algoritmo.jsonUtils.excluiPersonagemPorNome(nomePersonagem.toUpperCase());
-            Algoritmo.jsonUtils.adicionaPersonagem(jsonPersonagem);
+            algoritmo.getJsonUtils().excluiPersonagemPorNome(nomePersonagem.toUpperCase());
+            algoritmo.getJsonUtils().adicionaPersonagem(jsonPersonagem);
 
             //Escreve novo JSON na base de conhecimento
-            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPersonagens().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPersonagensFile);
+            jsonWriter.writeJson(algoritmo.getJsonUtils().getJsonPersonagens().toString(), algoritmo.getJsonUtils().getJsonSingleton().jsonPersonagensFile);
 
             //Escreve nova pergunta na base de conhecimento
-            Algoritmo.jsonUtils.adicionaPergunta(chaveNovaPergunta, novaPergunta);
-            jsonWriter.writeJson(Algoritmo.jsonUtils.getJsonPerguntas().toString(), Algoritmo.jsonUtils.getJsonSingleton().jsonPerguntasFile);
+            algoritmo.getJsonUtils().adicionaPergunta(chaveNovaPergunta, novaPergunta);
+            jsonWriter.writeJson(algoritmo.getJsonUtils().getJsonPerguntas().toString(), algoritmo.getJsonUtils().getJsonSingleton().jsonPerguntasFile);
         }
     }
 }
